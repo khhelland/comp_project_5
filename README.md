@@ -1,0 +1,1 @@
+Prosjekt for å simulere diffusjon med Monte-Carlo-metoder.
