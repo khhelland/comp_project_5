@@ -9,7 +9,7 @@ int main()
 {
   int N = 1e4;
   double dt = 1e-3;
-  double T = 1;
+  double T = 0.02;
   vector<double> particles;
   double D = 1;
   double step = sqrt(2*D*dt);
@@ -24,6 +24,7 @@ int main()
   for(double t=0;t<T;t+=dt)
     {
       int add = 0;
+      int count = 0;
       //loop over particles
       for (vector<double>::iterator it = particles.begin(); 
            it != particles.end(); ++it) 
@@ -31,7 +32,7 @@ int main()
           //draw random number r
           double eps = 1e-10;
           double r = distribution(generator);//??
-          if (r<0.5) //positive move
+          if (r<0.5) //negative move
             {
               //reject backward move if particle is "at" 0
               if ((*it)>=eps)
@@ -40,7 +41,7 @@ int main()
                   //erase particle if it moves to 0
                   if (*it < eps) particles.erase(it);  }
             }
-          //negative move
+          //positive move
           else 
             {
               //add particles at 0 after timestep if particle moves from 0
@@ -50,6 +51,8 @@ int main()
               //erase particle if it moves beyond 1
               if (*it>=1) particles.erase(it);
             }
+          
+          if ((*it)<eps) count++;
         }
       //add new particles to 0
       for(int i = 0; i < add; i++) particles.push_back(0);
