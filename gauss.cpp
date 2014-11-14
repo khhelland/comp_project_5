@@ -9,14 +9,14 @@ int main()
 {
   int N = 1e4;
   double dt = 1e-3;
-  double T = 0.02;
+  double T = 0.5;
   vector<double> particles;
   double D = 1;
   double std = sqrt(2*D*dt);
 
   //RNG&PDF
   default_random_engine generator;
-  normal_real_distribution<double> distribution(0,std);
+  normal_distribution<double> distribution(0,std);
 
   particles.assign(N,0);
   
@@ -30,12 +30,12 @@ int main()
            it != particles.end(); ++it) 
         {
           //draw random step
-          double eps = 1e-10;
+          double eps = 1e-3;
           double step = distribution(generator);//??
           if (*it<eps) 
             {
               //reject backward move if particle is "at" 0
-              if (if step>=0)
+              if (step>=0)
                 {
                   *it+=step;
                   
