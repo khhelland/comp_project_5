@@ -2,6 +2,7 @@
 #include <random>
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ int main()
 
   //RNG&PDF
   default_random_engine generator;
-  normal_distribution<double> distribution(0,std);
+  normal_distribution<double> distribution(0,1/sqrt(2));
 
   particles.assign(N,0);
   
@@ -49,11 +50,12 @@ int main()
               *it += step;
               
               //erase particle if it moves to 0
-              if (*it < eps) particles.erase(it);  
+              if (*it < eps) particles.erase(it); 
+              
+              //erase particle if it moves beyond 1
+              if (*it>=1) particles.erase(it);
             }
           
-          //erase particle if it moves beyond 1
-          if (*it>=1) particles.erase(it);
         }
       //add new particles to 0
       for(int i = 0; i < add; i++) particles.push_back(0);

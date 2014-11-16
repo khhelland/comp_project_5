@@ -2,6 +2,7 @@
 #include <random>
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -24,14 +25,14 @@ int main()
   for(double t=0;t<T;t+=dt)
     {
       int add = 0;
-      int count = 0;
+      
       //loop over particles
       for (vector<double>::iterator it = particles.begin(); 
            it != particles.end(); ++it) 
         {
           //draw random number r
           double eps = 1e-10;
-          double r = distribution(generator);//??
+          double r = distribution(generator);
           if (r<0.5) //negative move
             {
               //reject backward move if particle is "at" 0

@@ -14,3 +14,4 @@ hist(v,bins = bins,normed=1)
 plot(x,dense(x),'r')
 
 show()
+
