@@ -8,9 +8,9 @@ using namespace std;
 
 int main()
 {
-  int N = 1e4;
+  int N = 1e3;
   double dt = 1e-3;
-  double T = 0.02;
+  double T = 0.5;
   vector<double> particles;
   double D = 1;
   double step = sqrt(2*D*dt);
@@ -40,20 +40,20 @@ int main()
                 {
                   *it-=step;
                   //erase particle if it moves to 0
-                  if (*it < eps) particles.erase(it);  }
+                  if (*it < eps) {particles.erase(it); it--;}
+                }
             }
           //positive move
-          else 
+                 else 
             {
               //add particles at 0 after timestep if particle moves from 0
               if(*it<eps) add++;
               
               *it += step;
               //erase particle if it moves beyond 1
-              if (*it>=1) particles.erase(it);
+              if (*it>=1) {particles.erase(it);it--;}
             }
-          
-          if ((*it)<eps) count++;
+                  
         }
       //add new particles to 0
       for(int i = 0; i < add; i++) particles.push_back(0);

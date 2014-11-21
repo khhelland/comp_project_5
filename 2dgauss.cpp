@@ -15,7 +15,7 @@ using namespace std;
 
 int main()
 {
-  int N = 1e4;
+  int N = 1e2;
   double dt = 1e-3;
   double T = 0.5;
   vector<vector<double> > particles;
@@ -43,6 +43,12 @@ int main()
           double eps = 1e-3;
           double xstep = distribution(generator);//??
           double ystep = distribution(generator);
+          
+          //y-step
+          (*it)[1]+= ystep;
+          if ((*it)[1]<0) (*it)[1]+=1;
+          else if ((*it)[1]>1) (*it)[1]-=1;
+          
           // x-step?
           ///////////////////////////////////////////////////////////////////
           if ((*it)[0]<eps) 
@@ -53,6 +59,7 @@ int main()
                   (*it)[0]+=xstep;
                   
                   //add particles at 0 after timestep if particle moves from 0
+                  //legg til noe om y for de nye partiklene
                   if((*it)[0]>eps) add++;
                   
                 }
@@ -62,24 +69,23 @@ int main()
               (*it)[0] += xstep;
               
               //erase particle if it moves to 0
-              if ((*it)[0] < eps) particles.erase(it); 
+              if ((*it)[0] < eps) {particles.erase(it);it--;} 
               
               //erase particle if it moves beyond 1
-              if ((*it)[0]>=1) particles.erase(it);
+              if ((*it)[0]>=1) {particles.erase(it);it--;}
             }
           ////////////////////////////////////////////////////////////
-          //y-step?
           
-          (*it)[1]+= ystep;
+         
         }
       //add new particles to 0
       for(int i = 0; i < add; i++) particles.push_back({0,0});
     }
   
-  ofstream out("1dgaussstepmc.dat");
-  for(vector<double>::iterator it = particles.begin();it!=particles.end();it++)
+  ofstream out("2dgaussstepmc.dat");
+  for(vector<vector<double> >::iterator it = particles.begin();it!=particles.end();it++)
     {
-      out<<(*it)<<" ";
+      out<<(*it)[0]<<" "<<(*it)[1]<<endl;
     }
   
   return 0;

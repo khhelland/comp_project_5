@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-  int N = 1e4;
+  int N = 1e3;
   double dt = 1e-3;
   double T = 0.5;
   vector<double> particles;
@@ -31,8 +31,8 @@ int main()
            it != particles.end(); ++it) 
         {
           //draw random step
-          double eps = 1e-3;
-          double step = distribution(generator);//??
+          double eps = 1e-2;
+          double step = std*distribution(generator);//??
           if (*it<eps) 
             {
               //reject backward move if particle is "at" 0
@@ -50,10 +50,10 @@ int main()
               *it += step;
               
               //erase particle if it moves to 0
-              if (*it < eps) particles.erase(it); 
+              if (*it < eps) {particles.erase(it);it--;} 
               
               //erase particle if it moves beyond 1
-              if (*it>=1) particles.erase(it);
+              if (*it>=1) {particles.erase(it);it--;}
             }
           
         }
@@ -61,7 +61,8 @@ int main()
       for(int i = 0; i < add; i++) particles.push_back(0);
     }
   
-  ofstream out("1dgaussstepmc.dat");
+  ofstream out;
+  out.open("1dgaussstepmc.dat");
   for(vector<double>::iterator it = particles.begin();it!=particles.end();it++)
     {
       out<<(*it)<<" ";
