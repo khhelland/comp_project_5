@@ -5,9 +5,9 @@ LIBDIR =
 INCLUDES = 
 LINKERFLAGS = -larmadillo 
 
-PROJECT = explicit.x
+PROJECT = 2dpde.x
 
-obj =  explicit.o 
+obj =  2dpde.o 
 COMPILER = g++
 
 default: $(PROJECT)

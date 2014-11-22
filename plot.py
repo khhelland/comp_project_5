@@ -14,4 +14,3 @@ hist(v,bins = bins)
 #plot(x,dense(x),'r')
 
 show()
-

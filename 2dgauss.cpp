@@ -64,7 +64,7 @@ int main()
                   
                 }
             }
-          else 
+          else x
             {
               (*it)[0] += xstep;
               
