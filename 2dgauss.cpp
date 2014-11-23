@@ -1,93 +1,83 @@
 /*
-tror jeg kan bruke ca den samme koden som for 1d.
-Hva med å bruke en vektor av 2-arrays?
-randbetingelsene i y-retning?
-hvordan skal partiklene ved x=0 fordeles langs y?
+  name: const.cpp
+  Program to simulate diffusion in synapse with a 2d gaussian step random walk.
+  The program requires c++11.
 */
-
 #include <vector>
 #include <random>
-#include <iostream>
-#include <fstream>
+#include <algorithm>
 #include <cmath>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
+
 int main()
 {
-  int N = 1e2;
+  int N = 1e4;
   double dt = 1e-3;
-  double T = 0.5;
+  double T = 1;
+ 
   vector<vector<double> > particles;
-  double D = 1;
-  double std = sqrt(2*D*dt);
-  double dy = std;
-
+  vector<double> add;
+  double std = sqrt(2*dt);
+  
   //RNG&PDF
   default_random_engine generator;
   normal_distribution<double> distribution(0,1/sqrt(2));
-
-  //particles.assign(N,{0,0});
-  for(double y = 0; y <= 1; y+=dy) for(int i=0; i<N; i++) particles.push_back({0,y});
   
+  //initial state:
+  int Ny = 100;
+  int ny = N/Ny;
+  double dy = 1.0/(Ny-1);
+  for(double y =0;y<=1;y+=dy)
+    {particles.resize(particles.size() + ny, {0,y});}
+    
+  double eps = 1e-14;
   //time loop
-  for(double t=0;t<T;t+=dt)
+  for(double t = 0; t<T; t+=dt)
     {
-      int add = 0;
-      
-      //loop over particles
-      for (vector<vector<double> >::iterator it = particles.begin(); 
-           it != particles.end(); ++it) 
+      add.resize(0);
+      //particle loop
+          for(auto it = particles.begin(); it!=particles.end(); it++)
         {
           //draw random steps
-          double eps = 1e-3;
-          double xstep = distribution(generator);//??
-          double ystep = distribution(generator);
+          double xstep = std*distribution(generator);
+          double ystep = std*distribution(generator);
           
-          //y-step
-          (*it)[1]+= ystep;
-          if ((*it)[1]<0) (*it)[1]+=1;
-          else if ((*it)[1]>1) (*it)[1]-=1;
+          //add particle at 0 if particle moves from 0
+          if(fabs((*it)[0]) < eps)
+            {add.push_back((*it)[1]);}
           
-          // x-step?
-          ///////////////////////////////////////////////////////////////////
-          if ((*it)[0]<eps) 
+          //xstep
+          (*it)[0] += xstep;
+          
+          //remove particle if it moves to x <= 0 or x >= 1
+          if (((*it)[0] < eps)||((*it)[0] >= 1)) 
             {
-              //reject backward move if particle is "at" 0
-              if (xstep>=0)
-                {
-                  (*it)[0]+=xstep;
-                  
-                  //add particles at 0 after timestep if particle moves from 0
-                  //legg til noe om y for de nye partiklene
-                  if((*it)[0]>eps) add++;
-                  
-                }
+              swap(*it,particles.back());
+              particles.pop_back();
+              it--;              
+              continue;
             }
-          else x
-            {
-              (*it)[0] += xstep;
-              
-              //erase particle if it moves to 0
-              if ((*it)[0] < eps) {particles.erase(it);it--;} 
-              
-              //erase particle if it moves beyond 1
-              if ((*it)[0]>=1) {particles.erase(it);it--;}
-            }
-          ////////////////////////////////////////////////////////////
+          //ystep
+          (*it)[1] += ystep;
           
-         
+          //move particle if it moves out of y
+          if((*it)[1]<0) (*it)[1] +=1;
+          else if ((*it)[1]>1) (*it)[1] -=1;
+          
         }
-      //add new particles to 0
-      for(int i = 0; i < add; i++) particles.push_back({0,0});
+      //add the new particles
+      for(auto it = add.begin();it!=add.end();it++) particles.push_back({0,*it});
+      
     }
   
-  ofstream out("2dgaussstepmc.dat");
-  for(vector<vector<double> >::iterator it = particles.begin();it!=particles.end();it++)
-    {
-      out<<(*it)[0]<<" "<<(*it)[1]<<endl;
-    }
+  ofstream out("2dgauss.dat");
+  for(auto it = particles.begin(); it != particles.end(); it++)
+    {out<<(*it)[0]<<" "<<(*it)[1]<<endl;}
   
   return 0;
 }
-
+  

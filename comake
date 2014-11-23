@@ -1,0 +1,18 @@
+COMPILEFLAGS =  -O3 -std=c++11
+#LIBDIR = -L/usr/libs
+LIBDIR = 
+#INCLUDES = -I/usr/include
+INCLUDES = 
+LINKERFLAGS = 
+
+PROJECT = const.x
+
+obj =  const.o 
+COMPILER = g++
+
+default: $(PROJECT)
+
+$(PROJECT): $(obj)
+	$(COMPILER) $(LIBDIR) $(INCLUDES) -o $(PROJECT) $(obj) $(LINKERFLAGS)  
+%.o: %.cpp
+	$(COMPILER) -c -o $@ $^ $(INCLUDES) $(COMPILEFLAGS) 

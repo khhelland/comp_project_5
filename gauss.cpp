@@ -1,6 +1,6 @@
 /*
   name: const.cpp
-  Program to simulate diffusion in synapse with a constant step random walk.
+  Program to simulate diffusion in synapse with a gaussian step random walk.
   The program requires c++11.
 */
 #include <vector>
@@ -17,7 +17,7 @@ int main()
 {
   int N = 1e4;
   double dt = 1e-3;
-  double T = 0.5;
+  double T = 1;
   vector<double> particles;
   double std = sqrt(2*dt);
   
@@ -28,7 +28,7 @@ int main()
   //initial state:
   particles.resize(N,0);
   
-  double eps = 1e-;
+  double eps = 1e-14;
   //time loop
   for(double t = 0; t<T; t+=dt)
     {
