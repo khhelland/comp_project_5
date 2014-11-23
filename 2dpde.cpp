@@ -5,10 +5,9 @@
    and periodic boundary conditions in y.
 */
 
-
-
 #include <armadillo>
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 using namespace arma;
@@ -85,7 +84,7 @@ int main()
   //steps
   int n = 30;
   double dx = 1.0/(n-1);
-  double dt = 0.5*dx*dx;
+  double dt = 0.25*dx*dx;
   
   //total time
   double T  = 0.02;
@@ -96,9 +95,16 @@ int main()
   for(int j = 0; j<n; j++)
     for(int i = 1; i < n-1 ; i++) 
       v(i,j) = -1 + i*dx;
-  
+  clock_t start, mid, end;
+  start = clock();
   solve(dx,dt,T,v,*explicit_step,"exp.dat");
+  mid = clock();
   solve(dx,dt,T,v,*jacobi_step,"jac.dat");
+  end = clock();
   
+  double cps = CLOCKS_PER_SEC;
+  double exptime = (mid-start)/cps;
+  double imptime = (end-mid)/cps;
+  cout<<exptime<<"\t"<<imptime<<"\t"<<endl;
   return 0;
 }

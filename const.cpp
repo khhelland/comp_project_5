@@ -23,12 +23,12 @@ int main()
   
   //RNG&PDF
   default_random_engine generator;
-  normal_distribution<double> distribution(0,1);
+  uniform_real_distribution<double> distribution(0,1);
   
   //initial state:
   particles.resize(N,0);
   
-  double eps = 1e-;
+  double eps = 1e-14;
   //time loop
   for(double t = 0; t<T; t+=dt)
     {
@@ -37,7 +37,8 @@ int main()
       for(auto it = particles.begin(); it!=particles.end(); it++)
         {
           //draw random step
-          double step = std*distribution(generator);
+          double r = distribution(generator);
+          double step = (r<0.5)? -std : std;
           
           //add particle at 0 if particle moves from 0
           add += (fabs(*it) < eps);
@@ -59,7 +60,7 @@ int main()
       //cout<<add<<endl;
     }
   //cout <<particles.size()<<endl;
-  ofstream out("gauss.dat");
+  ofstream out("const.dat");
   for(auto it = particles.begin(); it != particles.end(); it++)
     {out<<(*it)<<endl;}
   
