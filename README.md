@@ -1,5 +1,7 @@
 Project 5 in Fys3150: Computaitonal physics for candidate 14.
 ==============================
+Files:
+---------------------
 - candidate14.pdf is the report.
 - const.cpp is the file for 1d constant step MC simulation.
 - comake is the make file for const.cpp
