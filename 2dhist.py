@@ -2,7 +2,7 @@ from numpy import *
 from matplotlib.pyplot import *
 from mpl_toolkits.mplot3d import Axes3D
 
-n = 200
+n = 30
 a = loadtxt("2dgauss.dat")
 h,x,y = histogram2d(a[:,0],a[:,1],bins = n)
 

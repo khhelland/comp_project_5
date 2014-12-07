@@ -1,5 +1,5 @@
 /*
-  name: const.cpp
+  name: gauss.cpp
   Program to simulate diffusion in synapse with a gaussian step random walk.
   The program requires c++11.
 */
@@ -9,6 +9,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
@@ -29,6 +30,8 @@ int main()
   particles.resize(N,0);
   
   double eps = 1e-14;
+
+  clock_t start = clock();
   //time loop
   for(double t = 0; t<T; t+=dt)
     {
@@ -40,7 +43,7 @@ int main()
           double step = std*distribution(generator);
           
           //add particle at 0 if particle moves from 0
-          add += (fabs(*it) < eps);
+          add += (*it < eps);
           
           //step
           *it += step;
@@ -56,9 +59,12 @@ int main()
         }
       //add the new particles
       particles.resize(particles.size()+add,0);
-      //cout<<add<<endl;
+
     }
-  //cout <<particles.size()<<endl;
+  
+  clock_t end = clock();
+  
+  cout<<"time: "<<((end-start)/(double)CLOCKS_PER_SEC)<<endl;
   ofstream out("gauss.dat");
   for(auto it = particles.begin(); it != particles.end(); it++)
     {out<<(*it)<<endl;}

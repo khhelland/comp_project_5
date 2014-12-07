@@ -9,6 +9,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ int main()
 {
   int N = 1e4;
   double dt = 1e-3;
-  double T = 0.5;
+  double T = 1;
   vector<double> particles;
   double std = sqrt(2*dt);
   
@@ -29,6 +30,8 @@ int main()
   particles.resize(N,0);
   
   double eps = 1e-14;
+  
+  clock_t start = clock();
   //time loop
   for(double t = 0; t<T; t+=dt)
     {
@@ -57,9 +60,13 @@ int main()
         }
       //add the new particles
       particles.resize(particles.size()+add,0);
-      //cout<<add<<endl;
+      
     }
-  //cout <<particles.size()<<endl;
+  
+  clock_t end = clock();
+  
+  cout<<"Time: "<<((end-start)/(double)CLOCKS_PER_SEC)<<endl;
+  
   ofstream out("const.dat");
   for(auto it = particles.begin(); it != particles.end(); it++)
     {out<<(*it)<<endl;}

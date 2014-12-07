@@ -10,7 +10,7 @@ def su(n,x,t):
 v = zeros((30,30))
 x = linspace(0,1,30)
 X,Y = meshgrid(x,x);
-t = 0.02
+t = 0.5
 for a in range(1,3000):
     v += su(a,X,t)
 v = v[:,1:-1]
@@ -18,7 +18,13 @@ v = v[:,1:-1]
 
 exp = loadtxt("exp.dat")[:,1:-1]
 imp = loadtxt("jac.dat")[:,1:-1]
+imp2 = loadtxt("jac2.dat")[:,1:-1]
 
-experr = amax(abs((exp-v)/v))
-imperr = amax(abs((imp-v)/v))
-print experr, imperr
+experr = amax(abs((exp-v)))
+imperr = amax(abs((imp-v)))
+imperr2 = amax(abs(imp2-v))
+
+rexperr = amax(abs((exp-v)/v))
+rimperr = amax(abs((imp-v)/v))
+rimperr2 = amax(abs((imp2-v)/v))
+print experr, rexperr, imperr, rimperr, imperr2, rimperr2

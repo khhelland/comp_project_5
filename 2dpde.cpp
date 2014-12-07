@@ -21,6 +21,7 @@ void explicit_step(mat &u, double alpha)
       
   for(int i=1; i<n-1; i++)
     {
+      //periodic boundary conditions
       u(i,0) = v(i,0) + alpha*(v(i,1)+v(i,n-1) + v(i+1,0) + v(i-1,0) - 4*v(i,0));
       for(int j=1; j<n-1; j++)
         {
@@ -47,6 +48,7 @@ void jacobi_step(mat &u, double alpha)
       diff = 0;
       for (int i = 1; i<n-1; i++)
         {
+          //periodic boundary conditions:
           u(i,0) = (1/(1+4*alpha))*(alpha*(v(i+1,0) + v(i-1,0)
                                            + v(i,1) + v(i,n-1)) + u_prev(i,0));
           for(int j = 1; j < n-1; j++)
@@ -75,7 +77,7 @@ void solve(double dx, double dt, double T, mat v,
   ofstream out(outfile);
   out << v.t(); 
 }
-
+ 
 
 
 
@@ -87,7 +89,7 @@ int main()
   double dt = 0.25*dx*dx;
   
   //total time
-  double T  = 0.02;
+  double T  = 1;
 
   //initial state
   mat v=zeros<mat>(n,n);
@@ -101,10 +103,12 @@ int main()
   mid = clock();
   solve(dx,dt,T,v,*jacobi_step,"jac.dat");
   end = clock();
-  
+  solve(dx,4*dt,T,v,*jacobi_step,"jac2.dat");
+  clock_t end2 = clock();
   double cps = CLOCKS_PER_SEC;
   double exptime = (mid-start)/cps;
   double imptime = (end-mid)/cps;
-  cout<<exptime<<"\t"<<imptime<<"\t"<<endl;
+  double imptime2 = (end2-end)/cps;
+  cout<<exptime<<"\t"<<imptime<<"\t"<<imptime2<<"\t"<<endl;
   return 0;
 }
